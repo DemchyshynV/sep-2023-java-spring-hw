@@ -11,5 +11,5 @@ import java.util.List;
 @ConfigurationProperties(prefix = "reference-data")
 public class ReferenceDataProperties {
 
-    private List<Office> offices;
+    private List<Fuel> fuels;
 }

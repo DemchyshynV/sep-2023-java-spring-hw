@@ -1,9 +1,8 @@
 package org.okten.demo;
 
 import lombok.RequiredArgsConstructor;
-import org.okten.demo.properties.Office;
+import org.okten.demo.properties.Fuel;
 import org.okten.demo.properties.ReferenceDataProperties;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,45 +17,33 @@ import java.util.Objects;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/reference-data")
 @RequiredArgsConstructor
 public class ReferenceDataController {
 
-    //@Value("${reference-data.categories}")
+    @Value("${reference-data.engineTypes}")
+    private List<String> engines;
 
-    //example with SpEL - Spring expression language
-    @Value("${reference-data.categories:}#{T(java.util.Collections).emptyList()}")
-    private List<String> categories;
 
     private final ReferenceDataProperties referenceDataProperties;
 
-    @GetMapping("/categories")
-    public ResponseEntity<List<String>> getCategories() {
-        return ResponseEntity.ok(categories);
+    @GetMapping("/engine-types")
+    public ResponseEntity<List<String>> getEngineTypes() {
+        return ResponseEntity.ok(engines);
     }
 
-    @GetMapping("/offices")
-    public ResponseEntity<List<Office>> getOffices(@RequestParam(required = false) String city) {
-        if (city != null) {
-            List<Office> result = referenceDataProperties
-                    .getOffices()
-                    .stream()
-                    .filter(office -> Objects.equals(office.getAddress().getCity(), city))
-                    .toList();
-            return ResponseEntity.ok(result);
-        } else {
-            return ResponseEntity.ok(referenceDataProperties.getOffices());
-        }
+    @GetMapping("/fuel-types")
+    public ResponseEntity<List<Fuel>> getOffices() {
+        return ResponseEntity.ok(referenceDataProperties.getFuels());
     }
-
-    @GetMapping("/offices/{name}")
-    public ResponseEntity<Office> getOffice(@PathVariable String name) {
-        Optional<Office> result = Optional
+//
+    @GetMapping("/fuel-types/{name}")
+    public ResponseEntity<Fuel> getOffice(@PathVariable String name) {
+        Optional<Fuel> result = Optional
                 .ofNullable(referenceDataProperties)
-                .map(ReferenceDataProperties::getOffices)
+                .map(ReferenceDataProperties::getFuels)
                 .stream()
                 .flatMap(Collection::stream)
-                .filter(office -> Objects.equals(office.getName(), name))
+                .filter(fuel -> Objects.equals(fuel.getName(), name))
                 .findFirst();
 
         return ResponseEntity.of(result);
