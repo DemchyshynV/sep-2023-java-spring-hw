@@ -1,5 +1,12 @@
 spring:
   application:
     name: sep-2023-java-spring
-  profiles:
-    active: store1
+  datasource:
+    url: "jdbc:mysql://localhost:3306/sep_2023_spring?createDatabaseIfNotExist=true"
+    username: "root"
+    password: "root"
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
